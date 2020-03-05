@@ -115,12 +115,17 @@ class DLinkedList:
         # – adds a new node (containing the item as its data) at the given position 
         assert isinstance(pos,int), ("Position not an integer")
         assert pos >= 0, ("Integer out of range")
-        if self.__size != 0:
-            previous = self.__head
-            
-        else:
+        if self.__size == 0 or pos >= self.__size:
             self.append(item)
-        #new_node = DLinkedListNode(item,None,None)
+        elif pos == 0:
+            self.add(item)
+        else:
+            i = 1
+            previous = self.__head
+            while previous.getNext() != None and i != pos:
+                previous = previous.getNext()
+                i+=1
+            DLinkedListNode(item,previous,previous.getNext())
         
     def pop1(self):
         # TODO:
