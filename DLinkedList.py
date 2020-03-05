@@ -61,12 +61,42 @@ class DLinkedList:
         return index        
          
     def add(self, item):
-        # TODO: 
-        pass
+        # adds an item at the start of the list
+        if self.__head != None:
+            new_node = DLinkedListNode(item,self.__head,None)
+            self.__head = new_node
+        else:
+            new_node = DLinkedListNode(item,None, None)
+            self.__head = new_node    
+        self.__size = self.__size + 1
         
-    def remove(self, item):
-        # TODO:
-        pass
+    def remove(self,item):
+        # remove the node containing the item from the list
+        if self.__size == 0:
+            raise Exception('List is Empty')
+        current = self.__head
+        previous = None
+        found = False
+        while current != None and not found:
+            if current.getData() == item:
+                found = True
+            else:
+                previous = current
+                current = current.getNext()
+        if not found:
+            raise Exception('Item not in list')
+        else:
+            if previous == None: # the item is in the first node of the list
+                self.__head = current.getNext()
+                #need to deref from the new head
+                self.__head.setPrevious(None)
+            elif current.getNext() == None: # last node
+                self.__tail = current.getPrevious()
+                self.__tail.setNext(None) 
+            else: # item is not in the first node
+                previous.setNext(None)
+                current.getNext().setPrevious(None)
+            self.size = self.size -1
         
     def append(self, item):
         # TODO:
