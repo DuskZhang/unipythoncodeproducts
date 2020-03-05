@@ -85,9 +85,7 @@ class DLinkedList:
             else:
                 previous = current
                 current = current.getNext()
-        if not found:
-            raise Exception('Item not in list')
-        else:
+        if found:
             if previous == None: # the item is in the first node of the list
                 self.__head = current.getNext()
                 #need to deref from the new head
@@ -114,8 +112,15 @@ class DLinkedList:
             self.size = self.size +1
         
     def insert(self, pos, item):
-        # TODO:
-        pass
+        # – adds a new node (containing the item as its data) at the given position 
+        assert isinstance(pos,int), ("Position not an integer")
+        assert pos >= 0, ("Integer out of range")
+        if self.__size != 0:
+            previous = self.__head
+            
+        else:
+            self.append(item)
+        #new_node = DLinkedListNode(item,None,None)
         
     def pop1(self):
         # TODO:
