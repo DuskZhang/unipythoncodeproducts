@@ -63,7 +63,7 @@ class SLinkedList:
                 i+=1
             new_node.setNext(previous.getNext())
             previous.setNext(new_node)
-            self.size = self.size +1
+        self.size = self.size +1
 
 
     def remove(self,item):
