@@ -96,7 +96,7 @@ class DLinkedList:
             else: # item is not in the first node
                 previous.setNext(None)
                 current.getNext().setPrevious(None)
-            self.size = self.size -1
+            self.__size = self.__size -1
         
     def append(self,item):
         # adds an item at the end of the list
@@ -109,7 +109,7 @@ class DLinkedList:
             self.__tail = new_node    
             if self.__head == None:
                 self.__head = new_node
-            self.size = self.size +1
+        self.__size = self.__size +1
         
     def insert(self, pos, item):
         # – adds a new node (containing the item as its data) at the given position 
@@ -126,31 +126,77 @@ class DLinkedList:
                 previous = previous.getNext()
                 i+=1
             DLinkedListNode(item,previous,previous.getNext())
-        
+        self.__size += 1
     def pop1(self):
-        # TODO:
-        pass
+        assert self.__size > 0, ("Error: Empty list")
+        val = self.__tail.getData()
+        if self.__size == 1:
+            self.__tail = None
+            self.__head = None
+        else:
+            self.__tail = self.__tail.getPrevious()
+            self.__tail.setNext(None)
+        return val
     
     def pop(self, pos=None):
-        # TODO:
-        # Hint - incorporate pop1 when no pos argument is given
-        pass
-        
+        if pos == None:
+            return self.pop1()
+        else:
+            assert isinstance(pos,int), ("Pos not an integer")
+            assert pos >= 0 and pos < self.__size, ("Pos not in range")
+            current = self.__head
+            i = 0
+            while current != None and i!= pos:
+                current = current.getNext()
+                i+=1
+            val = current.getData()
+            if self.__size == 1:
+                self.__tail = None
+                self.__head = None
+            elif i == 0:
+                self.__head = self.__head.getNext()
+            elif i == self.__size - 1:
+                self.__tail = self.__tail.getPrevious() 
+            current = DLinkedListNode(None,None,None)
+            return val
+                
+
     def searchLarger(self, item):
-        # TODO:
-        pass
+        current = self.__head
+        while current != None:
+            if current.getData() > item:
+                return current.getData()
+            current = current.getNext()
+        return -1
         
     def getSize(self):
-        # TODO:    
-        pass
+        return self.__size
     
     def getItem(self, pos):
-        # TODO:   
-        pass
+        assert pos >= -self.getSize() and pos <= self.getSize() - 1, ("Pos not in range")
+        if pos < 0:
+            current = self.__tail
+            i = -1
+            while current != None and i != pos:
+                current = current.getPrevious()
+                i -= 1    
+            return current.getData()
+        else:
+            current = self.__head
+            i = 0
+            while current != None and i != pos:
+                current = current.getNext()
+                i += 1    
+            return current.getData()
         
     def __str__(self):
-        # TODO:   
-        pass
+        current = self.__head
+        string = ''
+        while current.getNext() != None:
+            string = string + str(current.getData())+' '
+            current = current.getNext()
+        string+=current.getData()
+        return string
 
 
 def test():
@@ -162,7 +208,6 @@ def test():
             
     linked_list.add("World")
     linked_list.add("Hello")    
-        
     is_pass = (str(linked_list) == "Hello World")
     assert is_pass == True, "fail the test"
               
