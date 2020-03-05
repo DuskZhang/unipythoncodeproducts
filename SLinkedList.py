@@ -46,27 +46,26 @@ class SLinkedList:
 
 
     def insert(self,pos,item):
-        # inserts the item at pos
+        # inserts the item at pos or appends it if greater than the size
         assert isinstance(pos, int),("Error: pos not an integer")
         assert pos>=0 ,("Error: pos out of range")
         new_node = SLinkedListNode(item,None)
         current = self.head # Start the traversal
-        previous = self.head
-        #at the current
-        if self.size == 0: # check if list is empty
-            self.add(new_node)
+        previous = None
+        if self.size == 0:
+            self.add(item)
         elif pos == 0: #check if inserting at the front
             new_node.setNext(current)
             self.head = new_node
         else: #inserting in the middle of the list or the end
-            i = 0
-            while (current.getNext()!=None and i != pos - 1): #while not at the end or the current index not at the position
+            previous = self.head
+            i = 1 #inserting to be the new [1] element
+            while (current.getNext()!=None) and (i != pos): #if there are more elements or reached the position specified
                 previous = current # store previous
                 current= current.getNext() # traversing the list
                 i+=1
-            #finally set the previous next to be new_node
-            new_node.setNext(current.getNext())
             previous.setNext(new_node)
+            new_node.setNext(current.getNext())
             self.size = self.size +1
 
 
