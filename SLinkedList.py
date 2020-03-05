@@ -50,22 +50,19 @@ class SLinkedList:
         assert isinstance(pos, int),("Error: pos not an integer")
         assert pos>=0 ,("Error: pos out of range")
         new_node = SLinkedListNode(item,None)
-        current = self.head # Start the traversal
-        previous = None
+        previous = self.head
         if self.size == 0:
             self.add(item)
         elif pos == 0: #check if inserting at the front
-            new_node.setNext(current)
+            new_node.setNext(previous)
             self.head = new_node
         else: #inserting in the middle of the list or the end
-            previous = self.head
             i = 1 #inserting to be the new [1] element
-            while (current.getNext()!=None) and (i != pos): #if there are more elements or reached the position specified
-                previous = current # store previous
-                current= current.getNext() # traversing the list
+            while (previous.getNext()!=None) and (i != pos): 
+                previous= previous.getNext() # traversing the list
                 i+=1
+            new_node.setNext(previous.getNext())
             previous.setNext(new_node)
-            new_node.setNext(current.getNext())
             self.size = self.size +1
 
 
