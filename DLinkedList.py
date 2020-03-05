@@ -62,13 +62,12 @@ class DLinkedList:
          
     def add(self, item):
         # adds an item at the start of the list
-        if self.__head != None:
+        if self.__head != None: #nonempty
             new_node = DLinkedListNode(item,self.__head,None)
             self.__head = new_node
-        else:
+        else: #empty
             new_node = DLinkedListNode(item,None, None)
-            if self.__tail == None:
-                self.__tail = new_node
+            self.__tail = new_node
             self.__head = new_node    
         self.__size = self.__size + 1
         
@@ -86,29 +85,30 @@ class DLinkedList:
                 previous = current
                 current = current.getNext()
         if found:
-            if previous == None: # the item is in the first node of the list
+            if self.__size == 1:
+                self.__head = None
+                self.__tail = None
+            elif previous == None: # the item is in the first node of the list
                 self.__head = current.getNext()
-                #need to deref from the new head
                 self.__head.setPrevious(None)
-            elif current.getNext() == None: # last node
+            elif current.getNext() == None: 
                 self.__tail = current.getPrevious()
                 self.__tail.setNext(None) 
-            else: # item is not in the first node
-                previous.setNext(None)
-                current.getNext().setPrevious(None)
-            self.__size = self.__size -1
+            else: # item is in middle
+                previous.setNext(current.getNext())
+                current.getNext().setPrevious(previous)
+            self.__size -=1
         
     def append(self,item):
         # adds an item at the end of the list
         if self.__tail != None:
-            new_node = DLinkedListNode(item,self.__tail, None)
-            self.__tail.setNext(new_node)
+            new_node = DLinkedListNode(item,None, self.__tail) #prev is self.__tail
             self.__tail = new_node
-        else:
-            new_node = DLinkedListNode(item,None, None)
+            
+        else: #empty list
+            new_node = DLinkedListNode(item,None, None) 
             self.__tail = new_node    
-            if self.__head == None:
-                self.__head = new_node
+            self.__head = new_node
         self.__size = self.__size +1
         
     def insert(self, pos, item):
@@ -125,8 +125,8 @@ class DLinkedList:
             while previous.getNext() != None and i != pos:
                 previous = previous.getNext()
                 i+=1
-            DLinkedListNode(item,previous,previous.getNext())
-        self.__size += 1
+            DLinkedListNode(item,previous.getNext(),previous)
+            self.__size += 1
     def pop1(self):
         assert self.__size > 0, ("Error: Empty list")
         val = self.__tail.getData()
@@ -136,6 +136,7 @@ class DLinkedList:
         else:
             self.__tail = self.__tail.getPrevious()
             self.__tail.setNext(None)
+        self.__size -= 1
         return val
     
     def pop(self, pos=None):
@@ -157,16 +158,20 @@ class DLinkedList:
                 self.__head = self.__head.getNext()
             elif i == self.__size - 1:
                 self.__tail = self.__tail.getPrevious() 
-            current = DLinkedListNode(None,None,None)
+            current.setNext(None)
+            current.setPrevious(None)
+            self.__size -= 1
             return val
                 
 
     def searchLarger(self, item):
         current = self.__head
+        i = 0
         while current != None:
             if current.getData() > item:
-                return current.getData()
+                return i
             current = current.getNext()
+            i += 1
         return -1
         
     def getSize(self):
@@ -195,7 +200,7 @@ class DLinkedList:
         while current.getNext() != None:
             string = string + str(current.getData())+' '
             current = current.getNext()
-        string+=current.getData()
+        string+=str(current.getData())
         return string
 
 
@@ -243,7 +248,7 @@ def test():
     int_list2.remove(0)
     is_pass = (str(int_list2) == "9 8 7 6 5 4")
     assert is_pass == True, "fail the test"
-                
+    
     for i in range(11, 13):
         int_list2.append(i)
     is_pass = (str(int_list2) == "9 8 7 6 5 4 11 12")
