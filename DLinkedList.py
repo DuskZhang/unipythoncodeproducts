@@ -67,6 +67,8 @@ class DLinkedList:
             self.__head = new_node
         else:
             new_node = DLinkedListNode(item,None, None)
+            if self.__tail == None:
+                self.__tail = new_node
             self.__head = new_node    
         self.__size = self.__size + 1
         
@@ -98,9 +100,18 @@ class DLinkedList:
                 current.getNext().setPrevious(None)
             self.size = self.size -1
         
-    def append(self, item):
-        # TODO:
-        pass
+    def append(self,item):
+        # adds an item at the end of the list
+        if self.__tail != None:
+            new_node = DLinkedListNode(item,self.__tail, None)
+            self.__tail.setNext(new_node)
+            self.__tail = new_node
+        else:
+            new_node = DLinkedListNode(item,None, None)
+            self.__tail = new_node    
+            if self.__head == None:
+                self.__head = new_node
+            self.size = self.size +1
         
     def insert(self, pos, item):
         # TODO:
