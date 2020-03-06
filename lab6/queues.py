@@ -39,11 +39,11 @@ class BoundedQueue:
         return self.__items[0]
         
     # Returns True if the queue is empty, and False otherwise:    
-    def isEmpty(self):
+    def is_empty(self):
         return len(self.__items) == 0        
     
     # Returns True if the queue is full, and False otherwise:    
-    def isFull(self):
+    def is_full(self):
         return len(self.__items) == self.__capacity
     
     # Returns the number of items in the queue:    
