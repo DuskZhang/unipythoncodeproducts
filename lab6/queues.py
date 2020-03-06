@@ -14,10 +14,8 @@ class BoundedQueue:
         :return: No returns
         '''
         ##### START CODE HERE #####
-        '''
-        Remember to check the conditions
-        '''
-        pass
+        if self.__capacity > len(self.__items):
+            self.__items.append(item)
         #####  END CODE HERE ######
         
     # Removes and returns the front-most item in the queue.      
@@ -27,14 +25,11 @@ class BoundedQueue:
         Dequeue the element from the front of the queue and return it
         :return: The object that was dequeued
         '''
-
-        ##### START CODE HERE #####
-        '''
-        1. remember to check the conditions
-        2. return the appropriate value
-        '''
-
-        pass
+        if len(self.__items) == 0:
+            raise Exception("Bounded queue is empty")
+        val = self.__items[0]
+        del self.__items[0]
+        return val
         #####  END CODE HERE ######
     
     # Returns the front-most item in the queue, and DOES NOT change the queue.      
@@ -44,11 +39,11 @@ class BoundedQueue:
         return self.__items[0]
         
     # Returns True if the queue is empty, and False otherwise:    
-    def is_empty(self):
+    def isEmpty(self):
         return len(self.__items) == 0        
     
     # Returns True if the queue is full, and False otherwise:    
-    def is_full(self):
+    def isFull(self):
         return len(self.__items) == self.__capacity
     
     # Returns the number of items in the queue:    
@@ -102,12 +97,11 @@ class CircularQueue:
         :return: No returns
         '''
 
-        ##### START CODE HERE #####
-        '''
-        Remember to check the proper conditions 
-        '''
-        pass
-        #####  END CODE HERE ######
+        if not self.is_full(): # not full
+            self.__items[self.__tail] = item #modify tail to be item
+            self.__tail = (self.__tail + 1) % self.__capacity #increment tail circularly
+            self.__count += 1 #add to count
+        
         
     # Removes and returns the front-most item in the queue.      
     # Returns nothing if the queue is empty.    
@@ -116,8 +110,14 @@ class CircularQueue:
         Dequeue the the element from the front of the queue and return the value
         :return: Returns the object that is dequeued
         '''
-
-        ##### START CODE HERE #####
+        if not self.is_empty(): #if not empty
+            val = self.__items[self.__head] #take the value from head
+            self.__items[self.__head] = None #delete head item
+            self.__head = (self.__head + 1)%self.__capacity #increment head modulo n
+            self.__count -= 1 #minus count
+            return val
+        else:
+            raise Exception("The queue is empty")
         '''
         Remember to check the proper conditions (some hints)
         1. get item at the head of queue
@@ -126,7 +126,7 @@ class CircularQueue:
         4. Shift the head
         5. return the item
         '''
-        pass
+        
         #####  END CODE HERE ######            
     
     # Returns the front-most item in the queue, and DOES NOT change the queue.      
@@ -156,13 +156,15 @@ class CircularQueue:
     # clear() should not change the capacity    
     def clear(self):        
         self.__items = []
+        for i in range(self.__capacity):
+            self.__items.append(None)
         self.__count = 0
         self.__head = 0
         self.__tail = 0
     
     # Returns a string representation of the queue: 
     def __str__(self):               
-        str_exp = "]"        
+        str_exp = "["        
         i = self.__head
         for j in range(self.__count):            
             str_exp += str(self.__items[i]) + " "
@@ -177,6 +179,7 @@ class CircularQueue:
  
     
 def main():
+    '''
     # Test bounded queue creation
     bq=BoundedQueue(3)
     print("My bounded queue is:", bq)
@@ -184,14 +187,14 @@ def main():
     print("Is my bounded queue empty?", bq.isEmpty())
     print('----------------------------------')
     
-    '''
+
     # 1. To Do
     # Test when we try to dequeue from an EMPTY queue
     try:
-        # To Do: Write your own test
+        bq.dequeue()
 
     except Exception as dequeueError:
-        # To Do: Write a way to handle it
+        print(dequeueError.args[0])
 
     print('----------------------------------')
     '''
@@ -199,8 +202,7 @@ def main():
     '''
     # 2. To Do
     # Test adding one element to queue
-    
-    # Your test code goes here...
+    bq.enqueue('dank')
     
     print(bq)
     print(str(bq))
@@ -221,7 +223,7 @@ def main():
  
     '''
     # 4. To Do
-    # Test trying to add an element to a FULL queue
+    bq.enqueue("meme")
     
     # Your test code goes here...hint: look at dequeuing from EMPTY queue
         
@@ -246,11 +248,40 @@ def main():
 
     '''
     # 7. To Do: Uncomment print statements, one at a time
-    # Can we just access private capacity attribute directly outside of Class definition?
+    # Can we just access private capacity attribute directly outside of Class definition? no
     #print(bq.capacity)
     #print(bq.__capacity)
     '''
+    #TESTING CIRCULAR QUEUES
+    cq = CircularQueue(3)
+    print(cq.is_empty())
+    cq.enqueue(2)
+    print(cq)
+    print(repr(cq))
+    x = cq.dequeue()
+    print(x)
+    print(cq)
 
-    
+    try: 
+        cq.dequeue()
+    except Exception as dequeueError:
+        print(dequeueError.args[0])
+    cq.enqueue(1)
+    print(cq.is_full())
+    cq.enqueue(2)
+    cq.enqueue(3)
+    cq.enqueue(4)
+    print(repr(cq))
+    cq.dequeue()
+    cq.enqueue(5)
+    print(repr(cq))
+    print(cq.is_full())
+    print(cq.capacity())
+    cq.clear()
+    print(cq)
+    cq.enqueue(5)
+    print(repr(cq))
+    print(cq.peek())
+    print(cq.peek())
 if __name__ == '__main__':
     main()
